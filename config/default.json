@@ -1,0 +1,4 @@
+{
+  "jwtPrivateKey": "12345",
+  "db": "mongodb://localhost/vehicle_node"
+}

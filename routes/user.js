@@ -2,8 +2,8 @@ const express = require("express")
 const { validate, validateLogin } = require("../model/user")
 const _ = require("lodash")
 const { getUserByEmail, createUser, getUserByPhone } = require("../database/user")
-const { ErrUserWithEmailAlreadyExist, ErrUserWithPhoneAlreadyExist } = require("../errors/errors")
-const { passwordHash, generateAuthToken, matchedPassword } = require("../utils/utils")
+const { ErrUserWithEmailAlreadyExist, ErrUserWithPhoneAlreadyExist } = require("../utils/errors")
+const { passwordHash, generateAuthToken, matchPassword } = require("../utils/utils")
 const router = express.Router()
 
 router.post("/register", async(req, res) => {
@@ -37,14 +37,18 @@ router.post("/login", async(req, res) => {
     if (error) return res.status(400).send(jsonResponse = {message: error.details[0].message});
 
     let user = await getUserByEmail({email: req.body.email})
-    if (user) return res.status(400).send(jsonResponse = {message: "Invalid Email or Password"})
+    if (!user) return res.status(400).send(jsonResponse = {message: "Invalid Email or Password"})
 
-    const validPassword = await matchedPassword(req.body.password)
-    if (!validPassword) res.status(400).json({ error: "Invalid email or password" })
+    const validPassword = await matchPassword(user.password, req.body.password)
+    if (!validPassword) res.status(400).json({ message: "Invalid email or password" })
 
-    const token = generateAuthToken()
+    const token = generateAuthToken(user._id, user.email)
 
-    res.status(200).send(token)
+    res.status(200).send(jsonResponse = {
+        message: "Logged in successful",
+        data: _.pick(user, ["_id", 'email', "firstname"]),
+        token: token
+    })
 })
 
 module.exports = router

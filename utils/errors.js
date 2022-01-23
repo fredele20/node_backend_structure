@@ -6,17 +6,8 @@ let ErrNoUserWithPhone = "No user with the given phone number"
 let ErrNoUserWithUsername = "No user with the given username"
 
 
-let jsonResponse = {
-  message: "",
-  data: {},
-  token: ""
 
-}
 
 
 module.exports.ErrUserWithEmailAlreadyExist = ErrUserWithEmailAlreadyExist
 module.exports.ErrUserWithPhoneAlreadyExist = ErrUserWithPhoneAlreadyExist
-module.exports.jsonResponse = jsonResponse
-
-
-

@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const config = require("config")
-const { userSchema } = require("../model/user")
 
 
 async function passwordHash(password) {
@@ -10,19 +9,27 @@ async function passwordHash(password) {
   return hashedPassword
 }
 
-async function matchedPassword(enteredPassword) {
-  const password = userSchema.password
-  return await bcrypt.compare(enteredPassword, password)
+async function matchPassword(enteredPassword, existingPassword) {
+  return await bcrypt.compare(existingPassword, enteredPassword)
 }
 
-function generateAuthToken() {
+// TODO: I should come back to this
+function generateAuthToken(...data) {
   const token = jwt.sign(
-    {_id: userSchema._id},
+    {data: data},
     config.get('jwtPrivateKey')
   )
   return token
 }
 
+let jsonResponse = {
+  message: "",
+  data: {},
+  token: ""
+
+}
+
 module.exports.passwordHash = passwordHash
 module.exports.generateAuthToken = generateAuthToken
-module.exports.matchedPassword = matchedPassword
+module.exports.matchPassword = matchPassword
+module.exports.jsonResponse = jsonResponse

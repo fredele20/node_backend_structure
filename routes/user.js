@@ -13,7 +13,7 @@ router.post("/register", async(req, res) => {
     let user = await getUserByEmail({email: req.body.email})
     if (user) return res.status(400).send(jsonResponse = {message: ErrUserWithEmailAlreadyExist})
 
-    user = await getUserByPhone({pnone: req.body.phone})
+    user = await getUserByPhone({phone: req.body.phone})
     if (user) return res.status(400).send(jsonResponse = {message: ErrUserWithPhoneAlreadyExist})
     
     req.body.password = await passwordHash(req.body.password)

@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema({
     phone: {
         type: String,
         required: [true, "please add your phone number"],
+        unique: true
     },
 
     email: {
@@ -38,8 +39,6 @@ const userSchema = mongoose.Schema({
     }
 })
 
-
-// userSchema.methods.generateAuthToken = function {}
 
 function validateUser(user) {
     const schema = {
